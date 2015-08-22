@@ -2,9 +2,52 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>图片转dataUrl</title>
+    <style>
+        textarea{
+            width:80%;
+            height:200px;
+            margin-bottom:20px;
+        }
+    </style>
 </head>
 <body>
+<input id="inputFile" multiple="multiple" type="file" name="files[]" accept='image/*'>
+<div id="output">
 
+</div>
 </body>
+<script type="text/javascript" src="../lib/jquery.min.js"></script>
+<script>
+    $(function(){
+        var $input = $("#inputFile"),$output=$("#output");
+        var readBlobAsDataURL= function (blob, callback) {
+            var a = new FileReader();
+            a.onload = function(e) {callback(e.target.result);};
+            a.readAsDataURL(blob);
+                };
+//        readBlobAsDataURL(blob, function (dataurl){
+//            console.log(dataurl);
+//        });
+//        readBlobAsDataURL(file, function (dataurl){
+//            console.log(dataurl);
+//        });
+        var showRes = function(res,filename){
+            filename&&$output.append($("<div>").text(filename));
+            var $text = $("<textarea>");
+            $output.append($text);
+            $text.val(res);
+        }
+        $input.on("change",function(){
+            var files = $input[0].files;
+            $output.empty();
+            $.each(files,function(i,f){
+                readBlobAsDataURL(f,function(res){
+                    showRes(res, f.name);
+                })
+            })
+        })
+        window.input = $input;
+    })
+</script>
 </html>
