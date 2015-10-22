@@ -1,11 +1,6 @@
 /**
  * Created by Ian on 2015/10/17.
  */
-//https://portal.qiniu.com/bucket/setting/domain/default?bucket=pro-activity
-// https://portal.qiniu.com/bucket/activity/files?marker=&limit=169&prefix= get
-//https://portal.qiniu.com/bucket/activity/files?marker=eyJjIjowLCJrIjoiX2xvZy9hY3Rpdml0eS8yMDE1LTA5LTE5L3BhcnQwLmd6In0%3D&limit=130&prefix=   get
-//https://portal.qiniu.com/bucket/activity/files/0/delete  formdata  bucket=activity&keys%5B%5D=jsLib%2Fwxjs.min.js&keys%5B%5D=marketing%2FbabyVote%2Fimages%2FLoading.gif&keys%5B%5D=marketing%2FbabyVote%2Fimages%2Farrow.png
-//https://portal.qiniu.com/bucket/activity/files/0/delete formdata bucket=activity&keys%5B%5D=marketing%2FbabyVote%2Fscripts%2Fhammer.min.js
 	var QTools = (function(){
 		var config = {
 			bucket :"activity",
@@ -109,7 +104,7 @@
 			},
 			deleteAllFiles=function(arr){
 				var dfd = $.Deferred(),failArr=[],delArr = [];
-				var len = arr.length-1,step = 100,start = 0,end = 0;
+				var len = arr.length,step = 100,start = 0,end = 0;
 				while(end<len) {
 					end+=step;
 					if(end>len)end = len;
