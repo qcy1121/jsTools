@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>图片转dataUrl</title>
     <style>
+        body{background-color: #b7b7b7;}
         textarea{
             width:80%;
             height:200px;
@@ -17,37 +18,80 @@
 
 </div>
 </body>
-<script type="text/javascript" src="../lib/jquery.min.js"></script>
+<!--<script type="text/javascript" src="../lib/jquery.min.js"></script>-->
 <script>
-    $(function(){
-        var $input = $("#inputFile"),$output=$("#output");
-        var readBlobAsDataURL= function (blob, callback) {
-            var a = new FileReader();
-            a.onload = function(e) {callback(e.target.result);};
-            a.readAsDataURL(blob);
-                };
-//        readBlobAsDataURL(blob, function (dataurl){
-//            console.log(dataurl);
-//        });
-//        readBlobAsDataURL(file, function (dataurl){
-//            console.log(dataurl);
-//        });
-        var showRes = function(res,filename){
-            filename&&$output.append($("<div>").text(filename));
-            var $text = $("<textarea>");
-            $output.append($text);
-            $text.val(res);
+    //    $(function(){
+    var $ = function (res) {
+        return document.querySelector(res);
+    }, createElement = function (tagName, prop) {
+        var dom = document.createElement(tagName);
+        if (prop)
+            for (var i in prop) {
+                if (i == 'text') {
+                    dom.innerText = prop[i];
+                } else {
+                    dom.setAttribute(i, prop[i]);
+                }
+            }
+        return dom;
+    }, addEvent = function (dom, eventName, handler) {
+        if (typeof document.addEventListener != "undefined") {
+            addEvent = function (dom, eventName, handler) {
+                dom.addEventListener(eventName, handler, true)
+            };
+        } else {
+            addEvent = function (dom, eventName, handler) {
+                dom.attachEvent(eventName, handler);
+            }
         }
-        $input.on("change",function(){
-            var files = $input[0].files;
-            $output.empty();
-            $.each(files,function(i,f){
-                readBlobAsDataURL(f,function(res){
-                    showRes(res, f.name);
+        addEvent.apply(this, arguments);
+    };
+    var $input = $("#inputFile"), $output = $("#output");
+    var readBlobAsDataURL = function (blob, callback) {
+        var a = new FileReader();
+        a.onload = function (e) {
+            callback(e.target.result);
+        };
+        if(blob instanceof Blob)
+        a.readAsDataURL(blob);
+        else {
+            console.log(blob);
+        }
+    };
+    //        readBlobAsDataURL(blob, function (dataurl){
+    //            console.log(dataurl);
+    //        });
+    //        readBlobAsDataURL(file, function (dataurl){
+    //            console.log(dataurl);
+    //        });
+    var showRes = function (res, filename) {
+//        if(filename) {
+            var name =filename + "---size" + res.length;
+            var div = createElement('div', {text: name, style: "overflow:hidden"});
+            var img = createElement('img', {src: res, style: 'max-width:100px;float:left'});
+            div.appendChild(img);
+//        filename &&
+            $output.appendChild(div);
+            var $text = createElement("textarea");
+            $output.appendChild($text);
+            $text.value = res;
+//        }
+    }
+    addEvent($input, "change", function () {
+        var files = $input.files;
+        $output.innerHTML = '';
+        for (var i in files) {
+            var f = files[i];
+            if (f instanceof File)
+            var name = f.name;
+            (function(f,name) {
+                readBlobAsDataURL(f, function (res) {
+                    showRes(res, name);
                 })
-            })
-        })
-        window.input = $input;
+            })(f,name)
+        }
     })
+    window.input = $input;
+    //    })
 </script>
 </html>
